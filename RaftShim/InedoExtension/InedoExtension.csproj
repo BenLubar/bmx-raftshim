@@ -87,7 +87,6 @@
     <Compile Include="Credentials\RaftCredentials.cs" />
     <Compile Include="Editors\RaftCredentialsEditor.cs" />
     <Compile Include="Internals.cs" />
-    <Compile Include="Editors\ApplicationNamesEditor.cs" />
     <Compile Include="Operations\ExportRaftOperation.cs" />
     <Compile Include="Operations\ImportRaftOperation.cs" />
     <Compile Include="Operations\RaftOperationBase.cs" />

@@ -8,7 +8,6 @@ using Inedo.Documentation;
 using Inedo.Extensibility;
 using Inedo.Extensibility.Operations;
 using Inedo.Extensibility.RaftRepositories;
-using Inedo.Web;
 
 namespace Inedo.BuildMaster.Extensions.RaftShim.Operations
 {
@@ -28,7 +27,6 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Operations
         [Category("Scope")]
         [DisplayName("Application names")]
         [ScriptAlias("ApplicationNames")]
-        [CustomEditor(typeof(ApplicationNamesEditor))]
         public IEnumerable<string> ApplicationNames { get; set; }
 
         public sealed override async Task ExecuteAsync(IOperationExecutionContext context)
