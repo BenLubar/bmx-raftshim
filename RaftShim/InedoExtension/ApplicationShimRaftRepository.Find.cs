@@ -19,7 +19,7 @@ namespace Inedo.BuildMaster.Extensions.RaftShim
                    select new RaftItem(
                        AH.Switch<string, RaftItemType>(plan.PlanType_Code)
                            .Case(Domains.PlanTypes.Deployment, RaftItemType.DeploymentPlan)
-                           .Case(Domains.PlanTypes.Template, RaftItemType.Module)
+                           .Case(Domains.PlanTypes.Module, RaftItemType.Module)
                            .End(),
                        plan.Plan_Name,
                        plan.ModifiedOn_Date,

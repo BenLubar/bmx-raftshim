@@ -26,7 +26,7 @@ namespace Inedo.BuildMaster.Extensions.RaftShim
                     case RaftItemType.OrchestrationPlan:
                         break;
                     case RaftItemType.Module:
-                        plan = await db.Plans_GetPlanByNameAsync(this.ApplicationId, name, Domains.PlanTypes.Template);
+                        plan = await db.Plans_GetPlanByNameAsync(this.ApplicationId, name, Domains.PlanTypes.Module);
                         if (plan == null || plan.Application_Id != this.ApplicationId)
                             return;
 

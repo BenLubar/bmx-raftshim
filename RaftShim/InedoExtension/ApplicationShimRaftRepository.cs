@@ -44,7 +44,7 @@ namespace Inedo.BuildMaster.Extensions.RaftShim
                 case RaftItemType.OrchestrationPlan:
                     break;
                 case RaftItemType.Module:
-                    return this.FindPlansAsync(Domains.PlanTypes.Template);
+                    return this.FindPlansAsync(Domains.PlanTypes.Module);
                 case RaftItemType.Script:
                     return this.FindScriptsAsync();
                 case RaftItemType.File:

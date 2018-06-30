@@ -25,7 +25,7 @@ namespace Inedo.BuildMaster.Extensions.RaftShim
                 case RaftItemType.OrchestrationPlan:
                     break;
                 case RaftItemType.Module:
-                    return this.OpenPlanReadAsync(Domains.PlanTypes.Template, name);
+                    return this.OpenPlanReadAsync(Domains.PlanTypes.Module, name);
                 case RaftItemType.Script:
                     return this.OpenScriptReadAsync(name);
                 case RaftItemType.File:
