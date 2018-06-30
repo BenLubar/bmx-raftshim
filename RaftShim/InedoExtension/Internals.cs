@@ -16,7 +16,7 @@ namespace Inedo.BuildMaster.Extensions.RaftShim
         {
             get
             {
-                var extensionsManager = Type.GetType("Inedo.BuildMaster.Extensibility.ExtensionsManager,BuildMasterCoreEx");
+                var extensionsManager = Type.GetType("Inedo.BuildMaster.Extensibility.ExtensionsManager,BuildMaster");
                 var waitForInitializationAsync = extensionsManager.GetMethod("WaitForInitializationAsync", BindingFlags.Public | BindingFlags.Static);
                 var task = (Task)waitForInitializationAsync.Invoke(null, new object[0]);
                 var taskResult = (Task<InedoExtensionsManager>)task;
