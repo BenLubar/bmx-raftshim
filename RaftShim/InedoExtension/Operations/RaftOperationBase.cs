@@ -17,7 +17,6 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Operations
 {
     [ScriptNamespace("RaftShim", PreferUnqualified = true)]
     [Tag("rafts")]
-    [DefaultProperty(nameof(CredentialName))]
     public abstract class RaftOperationBase : ExecuteOperation, IHasCredentials<RaftCredentials>
     {
         protected RaftRepository Raft
@@ -57,9 +56,6 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Operations
             }
         }
 
-        [Required]
-        [DisplayName("Raft")]
-        [ScriptAlias("Credentials")]
-        public string CredentialName { get; set; }
+        public abstract string CredentialName { get; set; }
     }
 }

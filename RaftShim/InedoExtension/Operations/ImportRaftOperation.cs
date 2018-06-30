@@ -16,6 +16,11 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Operations
     [ScriptAlias("Import-Raft")]
     public sealed class ImportRaftOperation : ScopedRaftOperationBase
     {
+        [Required]
+        [DisplayName("Raft")]
+        [ScriptAlias("Credentials")]
+        public override string CredentialName { get; set; }
+
         [DisplayName("Delete missing items")]
         [ScriptAlias("DeleteMissing")]
         [DefaultValue(false)]
