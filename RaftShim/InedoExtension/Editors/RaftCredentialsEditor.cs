@@ -14,6 +14,7 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Editors
         private Type RaftType { get; set; }
         private ExtensionEditor RaftEditor { get; set; }
         private int? EnvironmentId { get; set; }
+        private ValidatingTextBox RaftName { get; } = new ValidatingTextBox { Required = true };
         private SelectList TypeSelect { get; set; }
         private SimpleVirtualCompositeControl Form { get; } = new SimpleVirtualCompositeControl();
 
@@ -26,10 +27,12 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Editors
                 this.RaftType = raft?.GetType();
                 if (this.RaftType == null)
                 {
+                    this.RaftName.Text = "";
                     this.RaftEditor = null;
                 }
                 else
                 {
+                    this.RaftName.Text = credential.RaftName;
                     this.RaftEditor = RaftRepositoryEditor.GetEditor(this.RaftType, this.EnvironmentId);
                     this.RaftEditor.BindToInstance(raft);
                 }
@@ -49,6 +52,7 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Editors
                 using (var raft = (RaftRepository)Activator.CreateInstance(this.RaftType))
                 {
                     this.RaftEditor.WriteToInstance(raft);
+                    credential.RaftName = this.RaftName.Text;
                     credential.RaftData = Persistence.SerializeToPersistedObjectXml(raft);
                 }
             }
@@ -86,6 +90,7 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Editors
             };
 
             this.Form.Controls.Clear();
+            this.Form.Controls.Add(new SlimFormField("Raft Name:", this.RaftName));
             this.Form.Controls.Add(new SlimFormField("Raft Type:", this.TypeSelect));
             if (this.RaftEditor != null)
             {

@@ -15,7 +15,7 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Operations
     {
         protected IEnumerable<(int id, string name)> Applications =>
             from a in DB.Applications_GetApplications(null, false)
-            join n in this.ApplicationNames on a.Application_Name equals n
+            join n in this.ApplicationNames ?? Enumerable.Empty<string>() on a.Application_Name equals n
             select (a.Application_Id, n);
 
         [Category("Scope")]

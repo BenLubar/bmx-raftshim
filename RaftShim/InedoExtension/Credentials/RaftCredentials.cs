@@ -19,13 +19,25 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Credentials
     {
         [Required]
         [Persistent]
+        public string RaftName { get; set; }
+
+        [Required]
+        [Persistent]
         public string RaftData { get; set; }
 
-        public RaftRepository Raft => this.RaftData == null ? null : (RaftRepository)Persistence.DeserializeFromPersistedObjectXml(this.RaftData);
+        public RaftRepository Raft
+        {
+            get
+            {
+                var raft = this.RaftData == null ? null : (RaftRepository)Persistence.DeserializeFromPersistedObjectXml(this.RaftData);
+                raft.RaftName = this.RaftName;
+                return raft;
+            }
+        }
 
         public override RichDescription GetDescription()
         {
-            return new RichDescription("Raft: ", this.Raft?.GetDescription() ?? new RichDescription("[unknown]"));
+            return new RichDescription("Raft: ", new Hilite(this.RaftName), ": ", this.Raft?.GetDescription() ?? new RichDescription("[unknown]"));
         }
 
         public override int GetHashCode() => this.Raft?.GetHashCode() ?? 0;

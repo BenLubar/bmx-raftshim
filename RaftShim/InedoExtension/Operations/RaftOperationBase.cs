@@ -19,16 +19,6 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Operations
     [Tag("rafts")]
     public abstract class RaftOperationBase : ExecuteOperation, IHasCredentials<RaftCredentials>
     {
-        protected RaftRepository Raft
-        {
-            get
-            {
-                var credentials = this.TryGetCredentials() ?? throw new InvalidOperationException("Raft not found.");
-                var raft = credentials.Raft ?? throw new InvalidOperationException("Raft not configured.");
-                raft.RaftName = this.CredentialName;
-                return raft;
-            }
-        }
         protected async Task<IUserDirectoryUser> GetExecutionCreatorAsync(int executionId)
         {
             var executionData = await new DB.Context(false).Executions_GetExecutionAsync(executionId);
@@ -56,6 +46,12 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Operations
             }
         }
 
-        public abstract string CredentialName { get; set; }
+        [Required]
+        [DisplayName("Raft")]
+        [ScriptAlias("Credentials")]
+        public string CredentialName { get; set; }
+
+        [MappedCredential(nameof(RaftCredentials.Raft))]
+        public RaftRepository Raft { get; set; }
     }
 }
