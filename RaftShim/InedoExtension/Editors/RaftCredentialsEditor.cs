@@ -3,6 +3,7 @@ using System.Linq;
 using Inedo.BuildMaster.Extensions.RaftShim.Credentials;
 using Inedo.Extensibility.RaftRepositories;
 using Inedo.Serialization;
+using Inedo.Web;
 using Inedo.Web.Controls;
 using Inedo.Web.Editors;
 
@@ -13,6 +14,8 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Editors
         private Type RaftType { get; set; }
         private ExtensionEditor RaftEditor { get; set; }
         private int? EnvironmentId { get; set; }
+        private SelectList TypeSelect { get; set; }
+        private SimpleVirtualCompositeControl Form { get; } = new SimpleVirtualCompositeControl();
 
         public override void BindToInstance(object instance)
         {
@@ -31,6 +34,7 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Editors
                     this.RaftEditor.BindToInstance(raft);
                 }
             }
+            this.ResetForm();
         }
 
         public override void WriteToInstance(object instance)
@@ -52,41 +56,41 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Editors
 
         protected override ISimpleControl CreateEditorControl()
         {
-            var typeSelect = new SelectList(
+            var selected = HttpContextThatWorksOnLinux.Current?.Request?.Form?["raft-type"];
+            this.RaftType = selected == null ? null : Internals.RaftTypes.Select(rt => rt.type).FirstOrDefault(t => t.FullName + "," + t.Assembly.GetName().Name == selected);
+            this.RaftType = this.RaftType ?? Internals.RaftTypes.FirstOrDefault().type;
+            this.RaftEditor = null;
+            if (this.RaftType != null)
+            {
+                this.RaftEditor = RaftRepositoryEditor.GetEditor(this.RaftType, this.EnvironmentId);
+                this.RaftEditor.BindToInstance(Activator.CreateInstance(this.RaftType));
+            }
+
+            return this.Form;
+        }
+
+        private void ResetForm()
+        {
+            this.TypeSelect = new SelectList(
                 from rt in Internals.RaftTypes
                 select new SelectListItem(
                     rt.name + AH.ConcatNE(" - ", rt.description),
-                    rt.type.AssemblyQualifiedName,
+                    rt.type.FullName + "," + rt.type.Assembly.GetName().Name,
                     this.RaftType == rt.type,
                     rt.extension?.Name
                 )
-            ) { AutoPostBack = true };
-
-            var form = new SimpleVirtualCompositeControl(
-                new SlimFormField("Raft Type:", typeSelect)
-            );
-            if (this.RaftEditor != null)
+            )
             {
-                form.Controls.Add(this.RaftEditor.EditorControl);
-            }
-
-            typeSelect.SelectedValueChanged += (s, e) =>
-            {
-                this.RaftType = Internals.RaftTypes.Select(rt => rt.type).FirstOrDefault(t => t.AssemblyQualifiedName == typeSelect.SelectedValue);
-                if (this.RaftEditor != null)
-                {
-                    form.Controls.Remove(this.RaftEditor.EditorControl);
-                }
-                this.RaftEditor = null;
-                if (this.RaftType != null)
-                {
-                    this.RaftEditor = RaftRepositoryEditor.GetEditor(this.RaftType, this.EnvironmentId);
-                    this.RaftEditor.BindToInstance(Activator.CreateInstance(this.RaftType));
-                    form.Controls.Add(this.RaftEditor.EditorControl);
-                }
+                Attributes = { ["name"] = "raft-type" },
+                AutoPostBack = true
             };
 
-            return form;
+            this.Form.Controls.Clear();
+            this.Form.Controls.Add(new SlimFormField("Raft Type:", this.TypeSelect));
+            if (this.RaftEditor != null)
+            {
+                this.Form.Controls.Add(this.RaftEditor.EditorControl);
+            }
         }
     }
 }
