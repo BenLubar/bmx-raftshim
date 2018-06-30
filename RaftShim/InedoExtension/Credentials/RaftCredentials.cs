@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using Inedo.BuildMaster.Extensions.RaftShim.Editors;
 using Inedo.Documentation;
+using Inedo.Extensibility;
 using Inedo.Extensibility.Credentials;
 using Inedo.Extensibility.RaftRepositories;
 using Inedo.Serialization;
@@ -11,6 +12,7 @@ namespace Inedo.BuildMaster.Extensions.RaftShim.Credentials
     [SlimSerializable]
     [DisplayName("Raft Shim")]
     [Description("A raft for use with operations from the Raft Shim extension.")]
+    [ScriptAlias("Raft")]
     [Tag("rafts")]
     [CustomEditor(typeof(RaftCredentialsEditor))]
     public sealed class RaftCredentials : ResourceCredentials
