@@ -20,7 +20,7 @@ namespace Inedo.BuildMaster.Extensions.RaftShim
                 var waitForInitializationAsync = extensionsManager.GetMethod("WaitForInitializationAsync", BindingFlags.Public | BindingFlags.Static);
                 var task = (Task)waitForInitializationAsync.Invoke(null, new object[0]);
                 var taskResult = (Task<InedoExtensionsManager>)task;
-                return taskResult.Result();
+                return taskResult.GetAwaiter().GetResult();
             }
         }
 
